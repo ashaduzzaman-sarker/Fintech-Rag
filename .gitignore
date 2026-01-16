@@ -1,3 +1,7 @@
+# Fintech-Rag Gitignore File
+data/
+logs/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
@@ -7,6 +11,7 @@ __pycache__/
 *.so
 
 # Distribution / packaging
+.devcontainer/
 .Python
 build/
 develop-eggs/
