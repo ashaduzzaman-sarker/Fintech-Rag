@@ -1,6 +1,7 @@
 # Fintech-Rag Gitignore File
 data/
 logs/
+.github/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
