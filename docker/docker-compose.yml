@@ -7,7 +7,7 @@ services:
   api:
     build:
       context: ..
-      dockerfile: Dockerfile
+      dockerfile: docker/Dockerfile
     container_name: fintech-rag-api
     ports:
       - "8000:8000"  # API

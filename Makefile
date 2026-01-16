@@ -102,16 +102,16 @@ ingest-sample: ## Ingest sample documents
 # ============================================================================
 
 docker-build: ## Build Docker image
-	docker build -t $(DOCKER_IMAGE):$(DOCKER_TAG) .
+	docker build -t $(DOCKER_IMAGE):$(DOCKER_TAG) -f docker/Dockerfile .
 
 docker-run: ## Run Docker container
-	docker run -p 8000:8000 --env-file .env $(DOCKER_IMAGE):$(DOCKER_TAG)
+	docker run -p 8000:8000 --env-file .env $(DOCKER_IMAGE):$(DOCKER_TAG) -f docker/Dockerfile
 
 docker-compose-up: ## Start all services with docker-compose
-	docker-compose -f docker/docker-compose.yml up -d
+	docker compose -f docker/docker-compose.yml up -d --build
 
 docker-compose-down: ## Stop all services
-	docker-compose -f docker/docker-compose.yml down
+	docker compose -f docker/docker-compose.yml down
 
 docker-compose-logs: ## View docker-compose logs
 	docker-compose -f docker/docker-compose.yml logs -f
