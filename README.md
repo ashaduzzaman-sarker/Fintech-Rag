@@ -1,4 +1,4 @@
-# FinTech RAG Knowledge Assistant 🏦
+# FinTech RAG Knowledge Assistant
 
 **Production-ready Retrieval-Augmented Generation (RAG) assistant for financial institutions.**
 
