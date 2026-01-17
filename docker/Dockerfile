@@ -14,11 +14,15 @@ RUN apt-get update && apt-get install -y \
     g++ \
     && rm -rf /var/lib/apt/lists/*
 
+ARG INSTALL_DEV=false
+
 # Copy requirements
-COPY requirements.txt .
+COPY requirements*.txt .
 
 # Install Python dependencies
-RUN pip install --user --no-cache-dir -r requirements.txt
+# RUN pip install --user --no-cache-dir -r requirements.txt
+RUN pip install -r requirements.txt && \
+    if [ "$INSTALL_DEV" = "true" ] ; then pip install -r requirements-dev.txt ; fi
 
 # ============================================================================
 # Stage 2: Runtime
