@@ -34,26 +34,22 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-pip-
 
-    - name: Install dependencies
+    - name: Install lint dependencies
       run: |
         python -m pip install --upgrade pip
         pip install ruff black isort mypy
 
     - name: Run Ruff (linting)
       run: ruff check app/
-      continue-on-error: true
 
     - name: Run Black (formatting check)
       run: black --check app/
-      continue-on-error: true
 
     - name: Run isort (import sorting)
       run: isort --check-only app/
-      continue-on-error: true
 
     - name: Run mypy (type checking)
       run: mypy app/ --ignore-missing-imports
-      continue-on-error: true
 
   # ============================================================================
   # Security Scanning
@@ -73,11 +69,16 @@ jobs:
 
     - name: Run Bandit (security linter)
       run: |
+        python -m pip install --upgrade pip
         pip install bandit
         bandit -r app/ -f json -o bandit-report.json
-      continue-on-error: true
 
-    - name: Upload Bandit report
+    - name: Upload Bandit report artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: bandit-report
+        path: bandit-report.json
+
   # ============================================================================
   # Unit Tests
   # ============================================================================
@@ -102,18 +103,17 @@ jobs:
 
     - name: Run tests with coverage
       env:
-        # Mock API keys for tests
+          # Mock API keys for tests
         OPENAI_API_KEY: sk-test-key
         PINECONE_API_KEY: test-key
         COHERE_API_KEY: test-key
-        LANGCHAIN_TRACING_V2: false
+        LANGCHAIN_TRACING_V2: 'false'
       run: |
         pytest tests/ \
           --cov=app \
           --cov-report=xml \
-          --cov-report=html \
           --cov-report=term \
-          -v || true
+          -v
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
@@ -121,11 +121,8 @@ jobs:
         file: ./coverage.xml
         flags: unittests
         name: codecov-umbrella
-      continue-on-error: true Codecov
-#       uses: codecov/codecov-action@v3
-#       with:
-#         file: ./coverage.xml
-#         flags: unittests
+      continue-on-error: true
+
   # ============================================================================
   # Build Docker Image
   # ============================================================================
@@ -149,14 +146,8 @@ jobs:
         push: false
         tags: fintech-rag:${{ github.sha }}
         cache-from: type=gha
-        cache-to: type=gha,mode=max --severity HIGH,CRITICAL \
-#           fintech-rag:${{ github.sha }}
-#       continue-on-error: true
+        cache-to: type=gha,mode=max
 
-#   # ============================================================================
-#   # Integration Tests
-#   # ============================================================================
-#   integration:
   # ============================================================================
   # Integration Tests
   # ============================================================================
@@ -176,19 +167,19 @@ jobs:
 
     - name: Install dependencies and start server
       run: |
+        python -m pip install --upgrade pip
         pip install -r requirements.txt
         python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 &
-        sleep 5
+        sleep 10
 
-    - name: Run health check
+    - name: Run health checks
       run: |
-        curl -f http://localhost:8000/api/v1/health || exit 1
-        curl -f http://localhost:8000/ || exit 1
-        echo "✅ Health checks passed"=====================
-#   status-check:
-#     name: CI Status Check
+        curl -f http://localhost:8000/api/v1/health
+        curl -f http://localhost:8000/
+        echo "✅ Health checks passed"
+
   # ============================================================================
-  # Summary
+  # Summary / Status Check
   # ============================================================================
   status-check:
     name: CI Status Check
@@ -199,16 +190,24 @@ jobs:
     steps:
     - name: Check status
       run: |
-        if [ "${{ needs.lint.result }}" != "success" ] && [ "${{ needs.lint.result }}" != "skipped" ]; then
-          echo "❌ Lint failed"
+        if [ "${{ needs.lint.result }}" != "success" ]; then
+          echo "❌ Lint job failed"
           exit 1
         fi
-        if [ "${{ needs.test.result }}" != "success" ] && [ "${{ needs.test.result }}" != "skipped" ]; then
-          echo "❌ Tests failed"
+        if [ "${{ needs.security.result }}" != "success" ]; then
+          echo "❌ Security job failed"
           exit 1
         fi
-        if [ "${{ needs.build.result }}" != "success" ] && [ "${{ needs.build.result }}" != "skipped" ]; then
-          echo "❌ Build failed"
+        if [ "${{ needs.test.result }}" != "success" ]; then
+          echo "❌ Test job failed"
           exit 1
         fi
-        echo "✅
+        if [ "${{ needs.build.result }}" != "success" ]; then
+          echo "❌ Build job failed"
+          exit 1
+        fi
+        if [ "${{ needs.integration.result }}" != "success" ]; then
+          echo "❌ Integration job failed"
+          exit 1
+        fi
+        echo "✅ All CI checks passed"
