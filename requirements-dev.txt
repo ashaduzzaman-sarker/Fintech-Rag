@@ -23,8 +23,7 @@ safety==3.2.0
 # --- Type Stubs & Pydantic Support ---
 types-requests==2.31.0.20240406
 types-PyYAML==6.0.12.20240311
-# Added for Pydantic v2 support in Mypy
-pydantic-mypy==2.7.1
+# Pydantic v2 ships the mypy plugin as "pydantic.mypy"; no extra package needed
 
 # --- Documentation ---
 mkdocs==1.6.0
@@ -36,5 +35,6 @@ ipython==8.24.0
 
 # --- Performance Profiling ---
 # Note: py-spy may require sudo/root privileges in Docker
-py-spy==0.3.14
+# Updated for Python 3.12 compatibility
+py-spy==0.4.1
 memory-profiler==0.61.0
