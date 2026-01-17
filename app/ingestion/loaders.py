@@ -24,7 +24,7 @@ class DocumentLoader:
     SUPPORTED_EXTENSIONS = {".pdf", ".docx", ".txt", ".md"}
 
     def __init__(self):
-        self.stats = {"total_loaded": 0, "failed": 0, "by_type": {}}
+        self.stats: dict[str, Any] = {"total_loaded": 0, "failed": 0, "by_type": {}}
 
     def load_document(self, file_path: Path) -> list[Document]:
         """
@@ -58,6 +58,7 @@ class DocumentLoader:
 
         try:
             # Select appropriate loader
+            loader: PyPDFLoader | Docx2txtLoader | TextLoader
             if extension == ".pdf":
                 loader = PyPDFLoader(str(file_path))
             elif extension == ".docx":
@@ -203,7 +204,7 @@ class DocumentLoader:
         Remove None values and ensure JSON-serializable types.
         """
 
-        cleaned = {}
+        cleaned: dict[str, Any] = {}
         for key, value in metadata.items():
             # Skip None values
             if value is None:

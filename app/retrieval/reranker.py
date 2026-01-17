@@ -48,7 +48,11 @@ class CohereReranker:
         self.client = cohere.Client(api_key=settings.cohere_api_key)
 
         # Stats
-        self.stats = {"total_reranks": 0, "total_documents": 0, "avg_rerank_time": 0}
+        self.stats = {
+            "total_reranks": 0,
+            "total_documents": 0,
+            "avg_rerank_time": 0.0,
+        }
 
         logger.info("Cohere reranker initialized", extra={"model": self.model, "top_n": self.top_n})
 

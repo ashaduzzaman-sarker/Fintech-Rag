@@ -71,9 +71,9 @@ class HybridRetriever:
     def retrieve(
         self,
         query: str,
-        top_k: int = None,
-        vector_top_k: int = None,
-        bm25_top_k: int = None,
+        top_k: int | None = None,
+        vector_top_k: int | None = None,
+        bm25_top_k: int | None = None,
         filter_metadata: dict[str, Any] | None = None,
     ) -> list[dict[str, Any]]:
         """

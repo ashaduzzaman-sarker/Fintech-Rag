@@ -134,11 +134,14 @@ class RetrievalMetrics:
                 # No relevant document found
                 reciprocal_ranks.append(0.0)
 
-        return np.mean(reciprocal_ranks) if reciprocal_ranks else 0.0
+        return float(np.mean(reciprocal_ranks)) if reciprocal_ranks else 0.0
 
     @staticmethod
     def ndcg_at_k(
-        retrieved: list[str], relevant: set[str], k: int, relevance_scores: dict[str, float] = None
+        retrieved: list[str],
+        relevant: set[str],
+        k: int,
+        relevance_scores: dict[str, float] | None = None,
     ) -> float:
         """
         Normalized Discounted Cumulative Gain (NDCG@K).
@@ -164,7 +167,7 @@ class RetrievalMetrics:
 
         # Default binary relevance
         if relevance_scores is None:
-            relevance_scores = {doc: 1.0 for doc in relevant}
+            relevance_scores = dict.fromkeys(relevant, 1.0)
 
         def dcg(doc_list: list[str], k: int) -> float:
             dcg_score = 0.0
@@ -308,7 +311,7 @@ class EvaluationSuite:
         if k_values is None:
             k_values = [1, 3, 5, 10]
 
-        results = {
+        results: dict[str, Any] = {
             "num_queries": len(queries),
             "precision_at_k": {},
             "recall_at_k": {},
@@ -373,16 +376,23 @@ class EvaluationSuite:
         eval_a = self.evaluate_retrieval(queries, system_a_results, relevant_sets)
         eval_b = self.evaluate_retrieval(queries, system_b_results, relevant_sets)
 
-        comparison = {system_a_name: eval_a, system_b_name: eval_b, "improvements": {}}
+        comparison: dict[str, Any] = {
+            system_a_name: eval_a,
+            system_b_name: eval_b,
+            "improvements": {},
+        }
 
         # Calculate improvements
+        improvements: dict[str, str] = {}
         for metric in ["map", "mrr"]:
             improvement = (
                 (eval_b[metric] - eval_a[metric]) / eval_a[metric] * 100
                 if eval_a[metric] > 0
                 else 0
             )
-            comparison["improvements"][metric] = f"{improvement:+.2f}%"
+            improvements[metric] = f"{improvement:+.2f}%"
+
+        comparison["improvements"] = improvements
 
         logger.info("System comparison complete", extra=comparison)
 

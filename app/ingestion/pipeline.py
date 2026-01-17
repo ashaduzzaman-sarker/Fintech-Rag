@@ -49,7 +49,7 @@ class IngestionPipeline:
             "total_chunks": 0,
             "total_tokens": 0,
             "failed_files": 0,
-            "processing_time": 0,
+            "processing_time": 0.0,
         }
 
         logger.info(

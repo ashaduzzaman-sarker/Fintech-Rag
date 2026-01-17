@@ -5,7 +5,7 @@ Supports OpenAI embeddings with retry logic and rate limiting.
 
 import hashlib
 import time
-from typing import Any
+from typing import Any, cast
 
 import openai
 from langchain_core.documents import Document
@@ -43,10 +43,9 @@ class EmbeddingGenerator:
         self.batch_size = batch_size
         self.cache_enabled = cache_enabled and settings.is_development
 
-        # Initialize embeddings model
+        # Initialize embeddings model (API key is read from environment)
         self.embeddings = OpenAIEmbeddings(
             model=self.model_name,
-            openai_api_key=settings.openai_api_key,
             # Adjust batch size for rate limits
             chunk_size=batch_size,
         )
@@ -152,7 +151,7 @@ class EmbeddingGenerator:
             return self._embed_batch_with_retry(texts)
 
         # Check cache
-        embeddings = []
+        embeddings: list[list[float] | None] = []
         texts_to_embed = []
         indices_to_embed = []
 
@@ -164,7 +163,7 @@ class EmbeddingGenerator:
             else:
                 texts_to_embed.append(text)
                 indices_to_embed.append(idx)
-                embeddings.append(None)  # Placeholder
+                embeddings.append(None)  # Placeholder for later fill
 
         # Embed uncached texts
         if texts_to_embed:
@@ -178,7 +177,8 @@ class EmbeddingGenerator:
                 self._cache[cache_key] = embedding
                 embeddings[idx] = embedding
 
-        return embeddings
+        # At this point all placeholders should be filled (or every entry came from cache)
+        return cast(list[list[float]], embeddings)
 
     @retry(
         stop=stop_after_attempt(3),

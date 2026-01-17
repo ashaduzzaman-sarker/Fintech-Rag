@@ -6,6 +6,7 @@ Implements /ingest, /query, /health endpoints.
 import time
 from datetime import datetime
 from pathlib import Path
+from typing import Literal
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from prometheus_client import Counter, Histogram
@@ -209,9 +210,10 @@ async def query_rag(request: QueryRequest, deps: dict = Depends(get_dependencies
 
         # 1. Hybrid retrieval
         logger.debug("Performing hybrid retrieval...")
+        effective_top_k = request.top_k or settings.retrieval_rerank_top_n
         retrieval_results = hybrid_retriever.retrieve(
             query=request.question,
-            top_k=request.top_k * 2,  # Retrieve more for reranking
+            top_k=effective_top_k * 2,  # Retrieve more for reranking
             filter_metadata=(
                 {"category": request.filter_category} if request.filter_category else None
             ),
@@ -300,6 +302,8 @@ async def health_check() -> HealthResponse:
     """
 
     components = {}
+
+    status_val: Literal["healthy", "degraded", "unhealthy"]
 
     # Check components
     try:

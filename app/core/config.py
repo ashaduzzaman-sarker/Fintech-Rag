@@ -100,6 +100,11 @@ class Settings(BaseSettings):
         for path in [self.data_dir, self.raw_data_dir, self.processed_data_dir, self.index_dir]:
             path.mkdir(parents=True, exist_ok=True)
 
+        # Ensure API keys are available to SDKs that read from environment
+        import os
+
+        os.environ.setdefault("OPENAI_API_KEY", self.openai_api_key)
+
     @property
     def is_production(self) -> bool:
         """Check if running in production."""

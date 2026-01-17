@@ -60,8 +60,8 @@ FORMAT:
     def __init__(
         self,
         model_name: str | None = None,
-        temperature: float = None,
-        system_prompt_version: str = None,
+        temperature: float | None = None,
+        system_prompt_version: str | None = None,
     ):
         """
         Initialize RAG generator.
@@ -76,11 +76,10 @@ FORMAT:
         self.temperature = temperature if temperature is not None else settings.openai_temperature
         self.system_prompt_version = system_prompt_version or settings.rag_system_prompt_version
 
-        # Initialize LLM
+        # Initialize LLM (API key is read from environment)
         self.llm = ChatOpenAI(
             model=self.model_name,
             temperature=self.temperature,
-            openai_api_key=settings.openai_api_key,
             max_tokens=settings.openai_max_tokens,
         )
 
@@ -88,7 +87,11 @@ FORMAT:
         self.prompt = self._build_prompt_template()
 
         # Stats
-        self.stats = {"total_generations": 0, "avg_context_length": 0, "avg_response_length": 0}
+        self.stats = {
+            "total_generations": 0,
+            "avg_context_length": 0.0,
+            "avg_response_length": 0.0,
+        }
 
         logger.info(
             "RAG generator initialized",
@@ -165,7 +168,12 @@ Provide a comprehensive answer with proper citations.""",
 
             # Call LLM
             response = self.llm.invoke(messages)
-            answer = response.content
+
+            # ChatOpenAI.content may be a string or a list of parts; normalize to string
+            if isinstance(response.content, str):
+                answer: str = response.content
+            else:
+                answer = "".join(str(part) for part in response.content)
 
             # Extract citations from answer
             citations = self._extract_citations(answer, context_documents)

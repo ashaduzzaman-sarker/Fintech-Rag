@@ -32,7 +32,10 @@ class SemanticChunker:
     """
 
     def __init__(
-        self, chunk_size: int = None, chunk_overlap: int = None, model_name: str = "gpt-4"
+        self,
+        chunk_size: int | None = None,
+        chunk_overlap: int | None = None,
+        model_name: str = "gpt-4",
     ):
         """
         Initialize chunker.
@@ -102,7 +105,7 @@ class SemanticChunker:
         stats = {
             "input_docs": len(documents),
             "output_chunks": 0,
-            "avg_tokens_per_chunk": 0,
+            "avg_tokens_per_chunk": 0.0,
             "total_tokens": 0,
         }
 

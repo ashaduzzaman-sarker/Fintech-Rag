@@ -56,6 +56,7 @@ def setup_logging() -> None:
     console_handler.setLevel(log_level)
 
     # Configure formatter based on environment
+    formatter: logging.Formatter
     if settings.is_production:
         # JSON formatter for production
         formatter = CustomJsonFormatter(

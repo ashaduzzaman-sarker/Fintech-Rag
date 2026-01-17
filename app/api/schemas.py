@@ -16,7 +16,9 @@ class IngestRequest(BaseModel):
     """Request to ingest documents."""
 
     directory_path: str = Field(
-        ..., description="Path to directory containing documents", example="./data/raw/compliance"
+        ...,
+        description="Path to directory containing documents",
+        examples=["./data/raw/compliance"],
     )
     recursive: bool = Field(default=True, description="Search subdirectories recursively")
     use_advanced_chunking: bool = Field(default=True, description="Use structure-aware chunking")
@@ -44,12 +46,14 @@ class QueryRequest(BaseModel):
         min_length=3,
         max_length=500,
         description="Question to answer",
-        example="What are our Basel III capital requirements?",
+        examples=["What are our Basel III capital requirements?"],
     )
     top_k: int | None = Field(default=5, ge=1, le=20, description="Number of results to return")
     include_confidence: bool = Field(default=True, description="Include confidence scoring")
     filter_category: str | None = Field(
-        default=None, description="Filter by document category", example="compliance"
+        default=None,
+        description="Filter by document category",
+        examples=["compliance"],
     )
 
     @validator("question")

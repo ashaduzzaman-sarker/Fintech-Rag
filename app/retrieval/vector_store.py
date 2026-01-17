@@ -46,7 +46,11 @@ class PineconeVectorStore:
         self.index = self.pc.Index(self.index_name)
 
         # Stats
-        self.stats = {"total_upserted": 0, "total_queries": 0, "avg_query_time": 0}
+        self.stats: dict[str, Any] = {
+            "total_upserted": 0,
+            "total_queries": 0,
+            "avg_query_time": 0.0,
+        }
 
         logger.info(
             "Pinecone store initialized",
@@ -272,7 +276,7 @@ class PineconeVectorStore:
             metadata["content"] = document.page_content
 
         # Ensure all values are JSON-serializable
-        clean_metadata = {}
+        clean_metadata: dict[str, Any] = {}
         for key, value in metadata.items():
             if isinstance(value, str | int | float | bool):
                 clean_metadata[key] = value
