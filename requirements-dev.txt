@@ -1,0 +1,40 @@
+# --- Testing ---
+pytest==8.2.0
+pytest-asyncio==0.23.6
+pytest-cov==5.0.0
+pytest-watch==4.2.0
+pytest-mock==3.14.0
+# httpx is already in core, but listed here for clarity in test suites
+httpx==0.27.0
+
+# --- Code Quality (Optimized for Python 3.12 & Pydantic v2) ---
+# Ruff replaces black, isort, and bandit with 10x speed, but keeping them if you prefer specific hooks
+ruff==0.4.2
+black==24.4.2
+isort==5.13.2
+mypy==1.10.0
+pre-commit==3.7.1
+
+# --- Security ---
+bandit==1.7.8
+# safety 3.x+ requires an API key for some features; 2.3.5 is the last stable open version
+safety==3.2.0 
+
+# --- Type Stubs & Pydantic Support ---
+types-requests==2.31.0.20240406
+types-PyYAML==6.0.12.20240311
+# Added for Pydantic v2 support in Mypy
+pydantic-mypy==2.7.1
+
+# --- Documentation ---
+mkdocs==1.6.0
+mkdocs-material==9.5.21
+
+# --- Debugging & Interactive ---
+ipdb==0.13.13
+ipython==8.24.0
+
+# --- Performance Profiling ---
+# Note: py-spy may require sudo/root privileges in Docker
+py-spy==0.3.14
+memory-profiler==0.61.0
