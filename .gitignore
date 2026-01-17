@@ -1,7 +1,7 @@
 # Fintech-Rag Gitignore File
 data/
 logs/
-.streamlit/secrets.toml
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
