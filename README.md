@@ -6,7 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 
----
+______________________________________________________________________
 
 ## 📋 Table of Contents
 
@@ -24,7 +24,7 @@
 - [Development](#-development)
 - [Contributing](#-contributing)
 
----
+______________________________________________________________________
 
 ## 🎯 Problem Statement
 
@@ -37,29 +37,31 @@ Financial institutions manage **1,000+ regulatory documents, policies, and repor
 - ❌ **No source attribution**: Answers without citations create audit issues
 
 **Business Impact:**
+
 - 10+ hours/week wasted per analyst
 - Delayed decision-making
 - Regulatory compliance risks
 
----
+______________________________________________________________________
 
 ## ✅ Solution
 
 An intelligent RAG system that:
 
-✅ **Understands context**: Semantic search beyond keywords  
-✅ **Multi-hop reasoning**: Connects information across documents  
-✅ **Grounded answers**: Every claim cited with source + page  
-✅ **Hybrid retrieval**: Combines keyword (BM25) + semantic (embeddings)  
+✅ **Understands context**: Semantic search beyond keywords
+✅ **Multi-hop reasoning**: Connects information across documents
+✅ **Grounded answers**: Every claim cited with source + page
+✅ **Hybrid retrieval**: Combines keyword (BM25) + semantic (embeddings)
 ✅ **Production-ready**: Scalable, monitored, tested
 
 **Business Value:**
+
 - ⚡ **60% faster** information retrieval
 - 📊 **Auditable citations** for compliance
 - 🎯 **Consistent answers** across organization
 - 💼 **Knowledge democratization**: Junior analysts access senior expertise
 
----
+______________________________________________________________________
 
 ## 🏗️ Architecture
 
@@ -101,33 +103,38 @@ An intelligent RAG system that:
 ### Data Flow
 
 1. **Ingestion** (Batch):
+
    ```
    Documents → Load → Chunk → Embed → Index (Pinecone + BM25)
    ```
 
-2. **Query** (Real-time):
+1. **Query** (Real-time):
+
    ```
    Query → Hybrid Search → Rerank → Generate → Validate → Response
    ```
 
----
+______________________________________________________________________
 
 ## 🚀 Features
 
 ### Core Capabilities
 
 - **📚 Document Processing**
+
   - PDF, DOCX, TXT, Markdown support
   - Semantic chunking with context preservation
   - Metadata enrichment (source, page, category)
 
 - **🔍 Hybrid Retrieval**
+
   - **Dense retrieval**: OpenAI embeddings via Pinecone
   - **Sparse retrieval**: BM25 keyword matching
   - **Fusion**: Reciprocal Rank Fusion (RRF)
   - **Reranking**: Cohere cross-encoder
 
 - **🤖 Answer Generation**
+
   - OpenAI GPT-4 with custom prompts
   - Automatic citation extraction
   - Confidence scoring
@@ -142,25 +149,25 @@ An intelligent RAG system that:
 - ✅ **Tested**: Unit + integration tests
 - 📝 **Documented**: OpenAPI specs
 
----
+______________________________________________________________________
 
 ## 🛠️ Tech Stack
 
-| Component | Technology | Purpose |
-|-----------|-----------|---------|
-| **RAG Framework** | LangChain | Orchestration |
-| **Vector DB** | Pinecone | Dense retrieval |
-| **Embeddings** | OpenAI text-embedding-3-large | Semantic search |
-| **Reranking** | Cohere rerank-v3 | Relevance optimization |
-| **LLM** | OpenAI GPT-4 | Answer generation |
-| **Sparse Search** | BM25Okapi | Keyword matching |
-| **API** | FastAPI | Backend service |
-| **Monitoring** | Prometheus + Grafana | Observability |
-| **Container** | Docker | Packaging |
-| **Orchestration** | Kubernetes | Deployment |
-| **CI/CD** | GitHub Actions | Automation |
+| Component         | Technology                    | Purpose                |
+| ----------------- | ----------------------------- | ---------------------- |
+| **RAG Framework** | LangChain                     | Orchestration          |
+| **Vector DB**     | Pinecone                      | Dense retrieval        |
+| **Embeddings**    | OpenAI text-embedding-3-large | Semantic search        |
+| **Reranking**     | Cohere rerank-v3              | Relevance optimization |
+| **LLM**           | OpenAI GPT-4                  | Answer generation      |
+| **Sparse Search** | BM25Okapi                     | Keyword matching       |
+| **API**           | FastAPI                       | Backend service        |
+| **Monitoring**    | Prometheus + Grafana          | Observability          |
+| **Container**     | Docker                        | Packaging              |
+| **Orchestration** | Kubernetes                    | Deployment             |
+| **CI/CD**         | GitHub Actions                | Automation             |
 
----
+______________________________________________________________________
 
 ## 📦 Installation
 
@@ -208,7 +215,7 @@ docker build -t fintech-rag:latest .
 docker-compose -f docker/docker-compose.yml up -d
 ```
 
----
+______________________________________________________________________
 
 ## 💻 Usage
 
@@ -229,6 +236,7 @@ curl -X POST "http://localhost:8000/api/v1/ingest" \
 ```
 
 **Response:**
+
 ```json
 {
   "status": "success",
@@ -255,6 +263,7 @@ curl -X POST "http://localhost:8000/api/v1/query" \
 ```
 
 **Response:**
+
 ```json
 {
   "question": "What are our Basel III capital requirements?",
@@ -312,23 +321,23 @@ answer = generator.generate_with_confidence(query, reranked)
 print(answer["answer"])
 ```
 
----
+______________________________________________________________________
 
 ## 📚 API Documentation
 
 ### Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/api/v1/ingest` | Ingest documents |
-| `POST` | `/api/v1/query` | Query RAG system |
-| `GET` | `/api/v1/health` | Health check |
-| `GET` | `/api/v1/stats` | System statistics |
-| `GET` | `/metrics` | Prometheus metrics |
+| Method | Endpoint         | Description        |
+| ------ | ---------------- | ------------------ |
+| `POST` | `/api/v1/ingest` | Ingest documents   |
+| `POST` | `/api/v1/query`  | Query RAG system   |
+| `GET`  | `/api/v1/health` | Health check       |
+| `GET`  | `/api/v1/stats`  | System statistics  |
+| `GET`  | `/metrics`       | Prometheus metrics |
 
 **Full documentation**: http://localhost:8000/docs (Swagger UI)
 
----
+______________________________________________________________________
 
 ## 📊 Evaluation
 
@@ -348,13 +357,14 @@ results = evaluator.compare_systems(
     system_b_results=hybrid_results,
     relevant_sets=ground_truth,
     system_a_name="Dense Only",
-    system_b_name="Hybrid + Rerank"
+    system_b_name="Hybrid + Rerank",
 )
 
 print(results)
 ```
 
 **Typical Results:**
+
 ```
 Dense Only:    MAP=0.67, MRR=0.72, P@5=0.58
 Hybrid+Rerank: MAP=0.81, MRR=0.88, P@5=0.74
@@ -370,7 +380,7 @@ Improvements: +20.9% MAP, +22.2% MRR
 - **MRR**: Mean Reciprocal Rank
 - **NDCG**: Normalized Discounted Cumulative Gain
 
----
+______________________________________________________________________
 
 ## 🚢 Deployment
 
@@ -391,15 +401,17 @@ kubectl logs -f deployment/fintech-rag-api -n production
 ### Scaling
 
 Horizontal Pod Autoscaler (HPA) configured for:
+
 - **Min replicas**: 3
 - **Max replicas**: 10
 - **Scale on**: CPU (70%), Memory (80%)
 
----
+______________________________________________________________________
 
 ## 📈 Monitoring
 
 Access dashboards:
+
 - **Prometheus**: http://localhost:9091
 - **Grafana**: http://localhost:3000 (admin/admin)
 
@@ -412,11 +424,12 @@ Access dashboards:
 ### Alerts
 
 Configure alerts in Prometheus for:
+
 - High error rates (>5%)
 - Slow queries (>5s p95)
-- Low confidence scores (<0.4)
+- Low confidence scores (\<0.4)
 
----
+______________________________________________________________________
 
 ## 🔧 Development
 
@@ -446,17 +459,17 @@ black app/
 mypy app/ --ignore-missing-imports
 ```
 
----
+______________________________________________________________________
 
 ## 🤝 Contributing
 
 We welcome contributions! Please follow:
 
 1. Fork the repository
-2. Create feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open Pull Request
+1. Create feature branch (`git checkout -b feature/amazing-feature`)
+1. Commit changes (`git commit -m 'Add amazing feature'`)
+1. Push to branch (`git push origin feature/amazing-feature`)
+1. Open Pull Request
 
 ### Development Workflow
 
@@ -465,13 +478,13 @@ We welcome contributions! Please follow:
 - Update documentation
 - Follow coding standards (Black, Ruff, mypy)
 
----
+______________________________________________________________________
 
 ## 📄 License
 
 MIT License - see [LICENSE](LICENSE) file
 
----
+______________________________________________________________________
 
 ## 🙏 Acknowledgments
 
@@ -481,7 +494,7 @@ MIT License - see [LICENSE](LICENSE) file
 - **Cohere**: Reranking
 - **FastAPI**: API framework
 
----
+______________________________________________________________________
 
 ## 📞 Support
 

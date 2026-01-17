@@ -1,17 +1,15 @@
-"""
-Generate synthetic FinTech documents for testing and demonstration.
+"""Generate synthetic FinTech documents for testing and demonstration.
 
 Creates realistic documents covering:
 - Compliance policies (AML, KYC, Basel III)
 - Risk management frameworks
 - Product specifications
-- Regulatory updates
+- Regulatory updates.
 """
 
-from pathlib import Path
+import secrets
 from datetime import datetime
-import random
-
+from pathlib import Path
 
 COMPLIANCE_CONTENT = {
     "AML Policy": """
@@ -53,7 +51,6 @@ Screen frequency: Transaction initiation, daily customer list refresh
 - Transaction records: 5 years
 - SAR documentation: 5 years
 """,
-
     "Basel III Capital Requirements": """
 BASEL III CAPITAL ADEQUACY FRAMEWORK
 Internal Risk Management Document | 2024
@@ -94,7 +91,6 @@ Annual ICAAP (Internal Capital Adequacy Assessment Process)
 Stress testing: Baseline, adverse, severely adverse scenarios
 Target buffer: Maintain 200bp above regulatory minimum
 """,
-
     "KYC Procedures": """
 KNOW YOUR CUSTOMER (KYC) PROCEDURES
 Compliance Manual | Updated Q1 2024
@@ -144,7 +140,7 @@ EDD Measures:
 - Source of wealth documentation
 - Senior management approval
 - Increased monitoring frequency
-"""
+""",
 }
 
 RISK_CONTENT = {
@@ -184,7 +180,6 @@ Daily: VaR, P&L, limit utilization
 Weekly: Risk factor decomposition
 Monthly: Stress test results, backtesting
 """,
-
     "Credit Risk Policy": """
 CREDIT RISK MANAGEMENT POLICY
 Version 4.0 | Effective March 2024
@@ -227,7 +222,7 @@ Lifetime ECL: Stage 2/3 loans
 Single obligor: 10% of capital
 Industry: 25% of portfolio
 Geographic: 40% single country (ex-domestic)
-"""
+""",
 }
 
 PRODUCT_CONTENT = {
@@ -274,7 +269,6 @@ Multi-factor authentication
 API rate limiting: 1000 req/min
 Session timeout: 15 minutes inactivity
 """,
-
     "Digital Wallet Features": """
 DIGITAL WALLET PRODUCT SPECIFICATION
 Release 2.5 | Q1 2024
@@ -314,60 +308,61 @@ Merchant payments: Free to consumer
 - State money transmitter licenses (US)
 - PSD2 strong customer authentication
 - GDPR data protection
-"""
+""",
 }
 
 
 def generate_documents(output_dir: Path, num_docs_per_category: int = 5):
     """
     Generate synthetic documents.
-    
+
     Args:
         output_dir: Directory to save documents
         num_docs_per_category: Number of documents per category
     """
-    
+
     output_dir.mkdir(parents=True, exist_ok=True)
-    
+
     categories = {
         "compliance": COMPLIANCE_CONTENT,
         "risk": RISK_CONTENT,
-        "products": PRODUCT_CONTENT
+        "products": PRODUCT_CONTENT,
     }
-    
+
     total_generated = 0
-    
+
     for category, content_dict in categories.items():
         category_dir = output_dir / category
         category_dir.mkdir(exist_ok=True)
-        
+
         for doc_name, content in content_dict.items():
             # Generate base document
             filename = f"{doc_name.replace(' ', '_').lower()}.txt"
             filepath = category_dir / filename
-            
-            with open(filepath, 'w') as f:
+
+            with open(filepath, "w") as f:
                 f.write(content)
-            
+
             print(f"✓ Generated: {filepath}")
             total_generated += 1
-            
+
             # Generate variations with slight modifications
             for i in range(num_docs_per_category - 1):
                 variant_name = f"{doc_name.replace(' ', '_').lower()}_v{i+2}.txt"
                 variant_path = category_dir / variant_name
-                
+
                 # Add version-specific content
                 variant_content = content + f"\n\n--- VERSION {i+2} NOTES ---\n"
                 variant_content += f"Last reviewed: {datetime.now().strftime('%B %Y')}\n"
-                variant_content += f"Minor updates to section {random.randint(1, 6)}\n"
-                
-                with open(variant_path, 'w') as f:
+                # Non-security-sensitive variation using cryptographically secure choice
+                variant_content += f"Minor updates to section {secrets.choice(range(1, 7))}\n"
+
+                with open(variant_path, "w") as f:
                     f.write(variant_content)
-                
+
                 print(f"✓ Generated: {variant_path}")
                 total_generated += 1
-    
+
     # Generate README
     readme_content = f"""
 # FinTech Test Documents
@@ -378,7 +373,7 @@ This directory contains {total_generated} synthetic documents for testing the RA
 
 ### Compliance ({len(COMPLIANCE_CONTENT) * num_docs_per_category} docs)
 - AML Policy
-- Basel III Capital Requirements  
+- Basel III Capital Requirements
 - KYC Procedures
 
 ### Risk ({len(RISK_CONTENT) * num_docs_per_category} docs)
@@ -408,11 +403,11 @@ curl -X POST "http://localhost:8000/api/v1/ingest" \\
 
 Generated: {datetime.now().isoformat()}
 """
-    
+
     readme_path = output_dir / "README.md"
-    with open(readme_path, 'w') as f:
+    with open(readme_path, "w") as f:
         f.write(readme_content)
-    
+
     print(f"\n{'='*60}")
     print(f"✓ Successfully generated {total_generated} documents")
     print(f"✓ Output directory: {output_dir.absolute()}")

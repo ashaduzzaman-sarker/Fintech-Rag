@@ -15,17 +15,14 @@ class Settings(BaseSettings):
     """Application settings loaded from environment variables."""
 
     model_config = SettingsConfigDict(
-        env_file=".env",
-        env_file_encoding="utf-8",
-        case_sensitive=False,
-        extra="ignore"
+        env_file=".env", env_file_encoding="utf-8", case_sensitive=False, extra="ignore"
     )
 
     # Application
     app_name: str = Field(default="FinTech RAG Assistant")
     environment: Literal["development", "staging", "production"] = "development"
     log_level: str = "INFO"
-    api_host: str = "0.0.0.0"
+    api_host: str = "127.0.0.1"
     api_port: int = 8000
 
     # OpenAI
@@ -51,22 +48,13 @@ class Settings(BaseSettings):
 
     # Retrieval Configuration
     retrieval_top_k_vector: int = Field(
-        default=20, 
-        ge=1, 
-        le=100,
-        description="Number of results from vector search"
+        default=20, ge=1, le=100, description="Number of results from vector search"
     )
     retrieval_top_k_bm25: int = Field(
-        default=20,
-        ge=1,
-        le=100,
-        description="Number of results from BM25 search"
+        default=20, ge=1, le=100, description="Number of results from BM25 search"
     )
     retrieval_rerank_top_n: int = Field(
-        default=5,
-        ge=1,
-        le=50,
-        description="Final number of reranked results"
+        default=5, ge=1, le=50, description="Final number of reranked results"
     )
     chunk_size: int = Field(default=800, ge=100, le=2000)
     chunk_overlap: int = Field(default=200, ge=0, le=500)
@@ -81,10 +69,7 @@ class Settings(BaseSettings):
         return v
 
     # Generation Configuration
-    rag_context_window: int = Field(
-        default=4000,
-        description="Max tokens for RAG context"
-    )
+    rag_context_window: int = Field(default=4000, description="Max tokens for RAG context")
     rag_system_prompt_version: str = "v1"
     enable_citation_validation: bool = True
 
@@ -112,8 +97,7 @@ class Settings(BaseSettings):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         # Create directories if they don't exist
-        for path in [self.data_dir, self.raw_data_dir, 
-                     self.processed_data_dir, self.index_dir]:
+        for path in [self.data_dir, self.raw_data_dir, self.processed_data_dir, self.index_dir]:
             path.mkdir(parents=True, exist_ok=True)
 
     @property

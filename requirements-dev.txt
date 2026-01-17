@@ -18,7 +18,7 @@ pre-commit==3.7.1
 # --- Security ---
 bandit==1.7.8
 # safety 3.x+ requires an API key for some features; 2.3.5 is the last stable open version
-safety==3.2.0 
+safety==3.2.0
 
 # --- Type Stubs & Pydantic Support ---
 types-requests==2.31.0.20240406

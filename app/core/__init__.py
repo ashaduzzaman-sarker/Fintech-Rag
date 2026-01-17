@@ -1,6 +1,6 @@
 """Core utilities and configuration."""
 
-from app.core.config import settings, get_settings
-from app.core.logging import setup_logging, get_logger
+from app.core.config import get_settings, settings
+from app.core.logging import get_logger, setup_logging
 
 __all__ = ["settings", "get_settings", "setup_logging", "get_logger"]

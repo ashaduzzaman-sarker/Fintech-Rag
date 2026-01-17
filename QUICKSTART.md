@@ -2,7 +2,7 @@
 
 Get the FinTech RAG system running in **5 minutes**.
 
----
+______________________________________________________________________
 
 ## Prerequisites Checklist
 
@@ -15,7 +15,7 @@ Before starting, ensure you have:
   - [ ] Pinecone API key ([get one here](https://www.pinecone.io/))
   - [ ] Cohere API key ([get one here](https://cohere.com/))
 
----
+______________________________________________________________________
 
 ## Step 1: Clone & Setup (2 minutes)
 
@@ -37,13 +37,14 @@ make setup
 ```
 
 **Edit `.env` file** with your API keys:
+
 ```bash
 OPENAI_API_KEY=sk-your-key-here
 PINECONE_API_KEY=your-pinecone-key
 COHERE_API_KEY=your-cohere-key
 ```
 
----
+______________________________________________________________________
 
 ## Step 2: Generate Test Data (1 minute)
 
@@ -56,6 +57,7 @@ python scripts/generate_test_data.py
 ```
 
 **Output:**
+
 ```
 ✓ Generated: data/raw/compliance/aml_policy.txt
 ✓ Generated: data/raw/compliance/basel_iii_capital_requirements.txt
@@ -64,7 +66,7 @@ python scripts/generate_test_data.py
 ✓ Successfully generated 15 documents
 ```
 
----
+______________________________________________________________________
 
 ## Step 3: Start the API (30 seconds)
 
@@ -77,11 +79,13 @@ python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
 **Verify it's running:**
+
 ```bash
 curl http://localhost:8000/api/v1/health
 ```
 
 **Expected response:**
+
 ```json
 {
   "status": "degraded",
@@ -92,9 +96,10 @@ curl http://localhost:8000/api/v1/health
   }
 }
 ```
+
 *(Status will be "healthy" after ingestion)*
 
----
+______________________________________________________________________
 
 ## Step 4: Ingest Documents (1-2 minutes)
 
@@ -126,14 +131,15 @@ response = requests.post(
     json={
         "directory_path": "./data/raw",
         "recursive": True,
-        "use_advanced_chunking": True
-    }
+        "use_advanced_chunking": True,
+    },
 )
 
 print(response.json())
 ```
 
 **Expected output:**
+
 ```json
 {
   "status": "success",
@@ -147,13 +153,14 @@ print(response.json())
 }
 ```
 
----
+______________________________________________________________________
 
 ## Step 5: Ask Your First Question! 🎉
 
 ### Sample Queries
 
 #### Query 1: AML Policy
+
 ```bash
 curl -X POST "http://localhost:8000/api/v1/query" \
   -H "Content-Type: application/json" \
@@ -165,6 +172,7 @@ curl -X POST "http://localhost:8000/api/v1/query" \
 ```
 
 #### Query 2: Basel III Requirements
+
 ```bash
 curl -X POST "http://localhost:8000/api/v1/query" \
   -H "Content-Type: application/json" \
@@ -175,6 +183,7 @@ curl -X POST "http://localhost:8000/api/v1/query" \
 ```
 
 #### Query 3: KYC Procedures
+
 ```bash
 curl -X POST "http://localhost:8000/api/v1/query" \
   -H "Content-Type: application/json" \
@@ -184,7 +193,7 @@ curl -X POST "http://localhost:8000/api/v1/query" \
   }'
 ```
 
----
+______________________________________________________________________
 
 ## Understanding the Response
 
@@ -192,7 +201,7 @@ curl -X POST "http://localhost:8000/api/v1/query" \
 {
   "question": "What are the AML transaction monitoring thresholds?",
   "answer": "According to the Anti-Money Laundering Policy, automated systems monitor for suspicious patterns including unusual transaction volumes exceeding $10,000 daily [Source: aml_policy.txt, Page: 1]. The policy requires filing a Suspicious Activity Report (SAR) within 30 days of detection [Source: aml_policy.txt, Page: 1].",
-  
+
   "citations": [
     {
       "source": "aml_policy.txt",
@@ -200,7 +209,7 @@ curl -X POST "http://localhost:8000/api/v1/query" \
       "type": "explicit"
     }
   ],
-  
+
   "context_used": [
     {
       "source": "./data/raw/compliance/aml_policy.txt",
@@ -208,7 +217,7 @@ curl -X POST "http://localhost:8000/api/v1/query" \
       "score": 0.92
     }
   ],
-  
+
   "confidence": 0.89,
   "confidence_level": "high",
   "model": "gpt-4-turbo-preview",
@@ -217,22 +226,25 @@ curl -X POST "http://localhost:8000/api/v1/query" \
 ```
 
 **Key Fields:**
+
 - `answer`: Generated response with inline citations
 - `citations`: Source documents referenced
 - `confidence`: How confident the system is (0-1)
 - `processing_time`: End-to-end latency
 
----
+______________________________________________________________________
 
 ## Next Steps
 
 ### 1. Explore the API Documentation
+
 ```bash
 # Open in browser
 open http://localhost:8000/docs
 ```
 
 Interactive Swagger UI with:
+
 - Full API reference
 - Try-it-out functionality
 - Request/response schemas
@@ -246,7 +258,7 @@ Interactive Swagger UI with:
 # Numerical queries
 "What is our maximum Value at Risk limit?"
 
-# Comparative queries  
+# Comparative queries
 "What are the differences between standard and enhanced CDD?"
 
 # Specific details
@@ -270,13 +282,14 @@ open http://localhost:9091  # Prometheus
 open http://localhost:3000  # Grafana (admin/admin)
 ```
 
----
+______________________________________________________________________
 
 ## Troubleshooting
 
 ### Issue: "Index not found" error
 
 **Solution:** Ensure Pinecone index is created
+
 ```bash
 python scripts/setup_pinecone.py
 ```
@@ -284,6 +297,7 @@ python scripts/setup_pinecone.py
 ### Issue: "API key not found"
 
 **Solution:** Check `.env` file has all keys
+
 ```bash
 cat .env | grep API_KEY
 ```
@@ -291,11 +305,13 @@ cat .env | grep API_KEY
 ### Issue: Slow ingestion
 
 **Reasons:**
+
 - Large documents take time to embed
 - OpenAI API rate limits
 - Network latency
 
 **Solutions:**
+
 - Use smaller test dataset initially
 - Check OpenAI usage limits
 - Enable caching (development only)
@@ -303,16 +319,18 @@ cat .env | grep API_KEY
 ### Issue: Low confidence scores
 
 **Reasons:**
+
 - Question not related to documents
 - Poor document quality
 - Ambiguous phrasing
 
 **Solutions:**
+
 - Verify documents are ingested
 - Rephrase question more specifically
 - Check document content matches query domain
 
----
+______________________________________________________________________
 
 ## Quick Command Reference
 
@@ -340,11 +358,12 @@ make clean               # Clean cache
 make clean-data          # Clean processed data
 ```
 
----
+______________________________________________________________________
 
 ## What You've Built
 
 ✅ **Production RAG System** with:
+
 - Hybrid search (vector + BM25)
 - Cohere reranking
 - OpenAI GPT-4 generation
@@ -352,18 +371,20 @@ make clean-data          # Clean processed data
 - Confidence scoring
 
 ✅ **API** with:
+
 - FastAPI backend
 - Pydantic validation
 - OpenAPI docs
 - Health checks
 
 ✅ **Infrastructure** ready for:
+
 - Docker deployment
 - Kubernetes scaling
 - Prometheus monitoring
 - CI/CD automation
 
----
+______________________________________________________________________
 
 ## Learn More
 
@@ -373,7 +394,7 @@ make clean-data          # Clean processed data
 - 🚀 [Deployment Guide](docs/DEPLOYMENT.md)
 - 🐛 [Troubleshooting](docs/TROUBLESHOOTING.md)
 
----
+______________________________________________________________________
 
 ## Support
 

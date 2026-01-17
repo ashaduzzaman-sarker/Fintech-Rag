@@ -19,9 +19,11 @@ help: ## Show this help message
 # ============================================================================
 
 install: ## Install production dependencies
+	$(PIP) install --upgrade pip
 	$(PIP) install -r requirements.txt
 
 dev-install: ## Install development dependencies
+	$(PIP) install --upgrade pip
 	$(PIP) install -r requirements.txt
 	$(PIP) install -r requirements-dev.txt
 	pre-commit install
@@ -105,7 +107,7 @@ docker-build: ## Build Docker image
 	docker build -t $(DOCKER_IMAGE):$(DOCKER_TAG) -f docker/Dockerfile .
 
 docker-run: ## Run Docker container
-	docker run -p 8000:8000 --env-file .env $(DOCKER_IMAGE):$(DOCKER_TAG) -f docker/Dockerfile
+	docker run -p 8000:8000 --env-file .env $(DOCKER_IMAGE):$(DOCKER_TAG)
 
 docker-compose-up: ## Start all services with docker-compose
 	docker compose -f docker/docker-compose.yml up -d --build
@@ -115,6 +117,12 @@ docker-compose-down: ## Stop all services
 
 docker-compose-logs: ## View docker-compose logs
 	docker-compose -f docker/docker-compose.yml logs -f
+
+docker-compose-ps: ## Show docker-compose services status
+	docker-compose -f docker/docker-compose.yml ps
+
+docker-compose-clean: ## Remove docker-compose volumes and containers
+	docker-compose -f docker/docker-compose.yml down -v
 
 docker-push: ## Push Docker image to registry
 	docker tag $(DOCKER_IMAGE):$(DOCKER_TAG) your-registry/$(DOCKER_IMAGE):$(DOCKER_TAG)
@@ -131,8 +139,11 @@ evaluate: ## Run full evaluation suite
 	$(PYTHON) -m app.evaluation.benchmark
 
 # ============================================================================
-# Monitoring
+# UI & Monitoring
 # ============================================================================
+
+streamlit: ## Run Streamlit UI
+	streamlit run ui/streamlit_app.py
 
 metrics: ## View Prometheus metrics
 	@echo "Opening Prometheus: http://localhost:9091"
@@ -165,11 +176,18 @@ clean-all: clean clean-data ## Clean everything including data
 	@echo "All data cleaned"
 
 # ============================================================================
-# Deployment
+# Kubernetes Deployment
 # ============================================================================
 
-k8s-apply: ## Apply Kubernetes configurations
+k8s-namespace: ## Create production namespace
+	kubectl create namespace production --dry-run=client -o yaml | kubectl apply -f -
+
+k8s-apply: ## Apply Kubernetes configurations (requires namespace first)
 	kubectl apply -f k8s/
+
+k8s-apply-full: ## Create namespace and apply all Kubernetes configurations
+	@$(MAKE) k8s-namespace
+	@$(MAKE) k8s-apply
 
 k8s-delete: ## Delete Kubernetes resources
 	kubectl delete -f k8s/
@@ -177,8 +195,26 @@ k8s-delete: ## Delete Kubernetes resources
 k8s-logs: ## View Kubernetes pod logs
 	kubectl logs -f deployment/fintech-rag-api -n production
 
+k8s-logs-all: ## View logs from all pods
+	kubectl logs -l app=fintech-rag -n production --tail=100 -f
+
 k8s-status: ## Check Kubernetes deployment status
 	kubectl get pods,svc,hpa -n production
+
+k8s-ingress: ## Show Kubernetes ingress status
+	kubectl get ingress -n production -o wide
+
+k8s-hpa: ## Show HorizontalPodAutoscaler status
+	kubectl get hpa -n production
+
+k8s-describe: ## Describe all deployment resources
+	kubectl describe deployment fintech-rag-api -n production
+
+k8s-port-forward: ## Port forward to API (localhost:8000 -> pod:8000)
+	kubectl port-forward svc/fintech-rag-api 8000:80 -n production
+
+k8s-shell: ## Open shell in pod
+	kubectl exec -it $$(kubectl get pod -l app=fintech-rag -n production -o jsonpath='{.items[0].metadata.name}') -n production -- sh
 
 # ============================================================================
 # Documentation
@@ -190,6 +226,9 @@ docs-serve: ## Serve API documentation
 
 docs-build: ## Build documentation (if using Sphinx/MkDocs)
 	@echo "Documentation build not configured yet"
+
+docs-deployment: ## Open deployment guide
+	@echo "See DEPLOYMENT_GUIDE.md for comprehensive deployment instructions"
 
 # ============================================================================
 # Database Operations
@@ -210,7 +249,7 @@ pre-commit: ## Run pre-commit hooks
 	pre-commit run --all-files
 
 # ============================================================================
-# Stats & Info
+# Status & Info
 # ============================================================================
 
 stats: ## Show project statistics
@@ -222,3 +261,28 @@ stats: ## Show project statistics
 	@echo ""
 	@echo "Test coverage:"
 	@pytest tests/ --cov=app --cov-report=term-missing | tail -1
+
+status: ## Show overall project status
+	@echo ""
+	@echo "📊 Fintech RAG Project Status"
+	@echo "======================================"
+	@echo ""
+	@curl -s http://localhost:8000/api/v1/health > /dev/null && echo "✅ API Server: Running" || echo "❌ API Server: Not running"
+	@docker ps > /dev/null 2>&1 && echo "✅ Docker: Available" || echo "❌ Docker: Not available"
+	@kubectl version > /dev/null 2>&1 && echo "✅ Kubernetes: Available" || echo "❌ Kubernetes: Not available"
+	@echo ""
+	@echo "📦 Project Components:"
+	@echo "   • FastAPI Server: http://localhost:8000"
+	@echo "   • API Docs: http://localhost:8000/docs"
+	@echo "   • Streamlit UI: http://localhost:8501 (run 'make streamlit')"
+	@echo "   • Prometheus: http://localhost:9091 (docker-compose)"
+	@echo "   • Grafana: http://localhost:3000 (docker-compose)"
+	@echo ""
+	@echo "🚀 Deployment Options:"
+	@echo "   • Local: make run"
+	@echo "   • Docker: make docker-run"
+	@echo "   • Docker Compose: make docker-compose-up"
+	@echo "   • Kubernetes: make k8s-apply-full"
+	@echo ""
+	@echo "📚 Documentation: See DEPLOYMENT_GUIDE.md"
+	@echo ""

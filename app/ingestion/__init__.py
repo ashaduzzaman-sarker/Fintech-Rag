@@ -1,9 +1,9 @@
 """Document ingestion pipeline."""
 
-from app.ingestion.pipeline import IngestionPipeline
-from app.ingestion.loaders import DocumentLoader
-from app.ingestion.chunkers import SemanticChunker, AdvancedSemanticChunker
+from app.ingestion.chunkers import AdvancedSemanticChunker, SemanticChunker
 from app.ingestion.embedders import EmbeddingGenerator
+from app.ingestion.loaders import DocumentLoader
+from app.ingestion.pipeline import IngestionPipeline
 
 __all__ = [
     "IngestionPipeline",

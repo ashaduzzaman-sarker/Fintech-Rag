@@ -1,3 +1,4 @@
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -7,43 +8,43 @@ metadata:
     app: fintech-rag
 data:
   # Application settings
-  ENVIRONMENT: "production"
-  LOG_LEVEL: "INFO"
-  API_HOST: "0.0.0.0"
-  API_PORT: "8000"
-  
+  ENVIRONMENT: production
+  LOG_LEVEL: INFO
+  API_HOST: 0.0.0.0
+  API_PORT: '8000'
+
   # Retrieval configuration
-  RETRIEVAL_TOP_K_VECTOR: "20"
-  RETRIEVAL_TOP_K_BM25: "20"
-  RETRIEVAL_RERANK_TOP_N: "5"
-  CHUNK_SIZE: "800"
-  CHUNK_OVERLAP: "200"
-  
+  RETRIEVAL_TOP_K_VECTOR: '20'
+  RETRIEVAL_TOP_K_BM25: '20'
+  RETRIEVAL_RERANK_TOP_N: '5'
+  CHUNK_SIZE: '800'
+  CHUNK_OVERLAP: '200'
+
   # Generation configuration
-  RAG_CONTEXT_WINDOW: "4000"
-  RAG_SYSTEM_PROMPT_VERSION: "v1"
-  ENABLE_CITATION_VALIDATION: "true"
-  
+  RAG_CONTEXT_WINDOW: '4000'
+  RAG_SYSTEM_PROMPT_VERSION: v1
+  ENABLE_CITATION_VALIDATION: 'true'
+
   # Monitoring
-  ENABLE_METRICS: "true"
-  METRICS_PORT: "9090"
-  
+  ENABLE_METRICS: 'true'
+  METRICS_PORT: '9090'
+
   # OpenAI settings (non-sensitive)
-  OPENAI_MODEL: "gpt-4-turbo-preview"
-  OPENAI_EMBEDDING_MODEL: "text-embedding-3-large"
-  OPENAI_TEMPERATURE: "0.1"
-  OPENAI_MAX_TOKENS: "2048"
-  
+  OPENAI_MODEL: gpt-4-turbo-preview
+  OPENAI_EMBEDDING_MODEL: text-embedding-3-large
+  OPENAI_TEMPERATURE: '0.1'
+  OPENAI_MAX_TOKENS: '2048'
+
   # Pinecone settings (non-sensitive)
-  PINECONE_INDEX_NAME: "fintech-rag-prod"
-  PINECONE_DIMENSION: "3072"
-  PINECONE_METRIC: "cosine"
-  PINECONE_CLOUD: "aws"
-  PINECONE_REGION: "us-east-1"
-  
+  PINECONE_INDEX_NAME: fintech-rag-prod
+  PINECONE_DIMENSION: '3072'
+  PINECONE_METRIC: cosine
+  PINECONE_CLOUD: aws
+  PINECONE_REGION: us-east-1
+
   # Cohere settings (non-sensitive)
-  COHERE_RERANK_MODEL: "rerank-english-v3.0"
-  COHERE_RERANK_TOP_N: "10"
+  COHERE_RERANK_MODEL: rerank-english-v3.0
+  COHERE_RERANK_TOP_N: '10'
 
 ---
 apiVersion: v1
@@ -56,12 +57,12 @@ metadata:
 type: Opaque
 stringData:
   # API Keys (base64 encoded in actual deployment)
-  OPENAI_API_KEY: "your-openai-api-key-here"
-  PINECONE_API_KEY: "your-pinecone-api-key-here"
-  COHERE_API_KEY: "your-cohere-api-key-here"
-  
+  OPENAI_API_KEY: your-openai-api-key-here
+  PINECONE_API_KEY: your-pinecone-api-key-here
+  COHERE_API_KEY: your-cohere-api-key-here
+
   # Optional: API authentication
-  API_KEY: "your-internal-api-key"
+  API_KEY: your-internal-api-key
 
 ---
 apiVersion: v1
@@ -71,7 +72,7 @@ metadata:
   namespace: production
 spec:
   accessModes:
-    - ReadWriteOnce
+  - ReadWriteOnce
   resources:
     requests:
       storage: 10Gi

@@ -4,8 +4,8 @@ global:
   scrape_interval: 15s
   evaluation_interval: 15s
   external_labels:
-    cluster: 'fintech-rag'
-    environment: 'production'
+    cluster: fintech-rag
+    environment: production
 
 # Alertmanager configuration (optional)
 # alerting:
@@ -21,27 +21,27 @@ rule_files:
 # Scrape configurations
 scrape_configs:
   # FastAPI application metrics
-  - job_name: 'fintech-rag-api'
-    static_configs:
-      - targets: ['api:9090']  # Docker service name
-        labels:
-          service: 'rag-api'
-          component: 'backend'
-    
-    metrics_path: '/metrics'
-    scrape_interval: 10s
-    
+- job_name: fintech-rag-api
+  static_configs:
+  - targets: [api:9090]        # Docker service name
+    labels:
+      service: rag-api
+      component: backend
+
+  metrics_path: /metrics
+  scrape_interval: 10s
+
     # Optional: Add authentication
     # basic_auth:
     #   username: 'prometheus'
     #   password: 'your-password'
 
   # Prometheus self-monitoring
-  - job_name: 'prometheus'
-    static_configs:
-      - targets: ['localhost:9090']
-        labels:
-          service: 'prometheus'
+- job_name: prometheus
+  static_configs:
+  - targets: [localhost:9090]
+    labels:
+      service: prometheus
 
 # Optional: Remote write for long-term storage
 # remote_write:

@@ -87,3 +87,7 @@ exclude_lines = [
     "if TYPE_CHECKING:",
     "raise NotImplementedError",
 ]
+
+[tool.bandit]
+skips = ["B101"]
+exclude_dirs = ["tests"]
