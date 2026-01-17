@@ -164,7 +164,7 @@ ______________________________________________________________________
 
 ## 📦 Local Setup
 
-For a full step-by-step walkthrough, see [QUICKSTART.md](QUICKSTART.md).
+For a full step-by-step walkthrough, see [QUICKSTART.md](docs/QUICKSTART.md).
 
 ### Prerequisites
 
@@ -197,7 +197,7 @@ ______________________________________________________________________
 
 ## ⚡ Quick Start
 
-The following is the minimal happy-path to see the system working end-to-end. Details and variations are documented in [QUICKSTART.md](QUICKSTART.md) and [STARTUP_GUIDE.md](STARTUP_GUIDE.md).
+The following is the minimal happy-path to see the system working end-to-end. Details and variations are documented in [QUICKSTART.md](docs/QUICKSTART.md) and [STARTUP_GUIDE.md](docs/STARTUP_GUIDE.md).
 
 ### 1. Start the API server
 
@@ -339,7 +339,7 @@ ______________________________________________________________________
 
 ## 🚢 Deployment
 
-For detailed deployment options (Docker, Docker Compose, Kubernetes, and Streamlit UI), see [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md).
+For detailed deployment options (Docker, Docker Compose, Kubernetes, and Streamlit UI), see [DEPLOYMENT_GUIDE.md](docs/DEPLOYMENT_GUIDE.md).
 
 Typical local Docker Compose flow:
 
@@ -375,7 +375,7 @@ make format          # Format code
 make stats           # Show basic project stats
 ```
 
-For a more detailed operator-focused view of the current state of the project and commands, see [STARTUP_GUIDE.md](STARTUP_GUIDE.md).
+For a more detailed operator-focused view of the current state of the project and commands, see [STARTUP_GUIDE.md](docs/STARTUP_GUIDE.md).
 
 ______________________________________________________________________
 
