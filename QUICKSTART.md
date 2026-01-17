@@ -21,8 +21,8 @@ ______________________________________________________________________
 
 ```bash
 # Clone repository
-git clone https://github.com/your-org/fintech-rag.git
-cd fintech-rag
+git clone https://github.com/ashaduzzaman-sarker/Fintech-Rag.git
+cd Fintech-Rag
 
 # Create virtual environment
 python3 -m venv venv
@@ -388,16 +388,14 @@ ______________________________________________________________________
 
 ## Learn More
 
-- 📖 [Full Documentation](README.md)
-- 🏗️ [Architecture Deep Dive](docs/ARCHITECTURE.md)
-- 📊 [Evaluation Guide](docs/EVALUATION.md)
-- 🚀 [Deployment Guide](docs/DEPLOYMENT.md)
-- 🐛 [Troubleshooting](docs/TROUBLESHOOTING.md)
+- 📖 Project overview: README.md
+- 🚀 Startup & operations: STARTUP_GUIDE.md
+- ⚡ Quick reference (this guide): QUICKSTART.md
+- 📦 Deployment options: DEPLOYMENT_GUIDE.md
+- ✅ Verification summary: VERIFICATION_REPORT.md
 
 ______________________________________________________________________
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/your-org/fintech-rag/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/your-org/fintech-rag/discussions)
-- **Email**: support@yourcompany.com
+- **Issues**: https://github.com/ashaduzzaman-sarker/Fintech-Rag/issues

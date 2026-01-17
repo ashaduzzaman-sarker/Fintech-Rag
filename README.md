@@ -1,28 +1,26 @@
 # FinTech RAG Knowledge Assistant 🏦
 
-> **Enterprise-grade Retrieval-Augmented Generation system for FinTech organizations**
+**Production-ready Retrieval-Augmented Generation (RAG) assistant for financial institutions.**
 
-[![CI Pipeline](https://github.com/your-org/fintech-rag/workflows/CI%20Pipeline/badge.svg)](https://github.com/your-org/fintech-rag/actions)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ______________________________________________________________________
 
 ## 📋 Table of Contents
 
 - [Problem Statement](#-problem-statement)
-- [Solution](#-solution)
+- [Solution Overview](#-solution-overview)
 - [Architecture](#-architecture)
-- [Features](#-features)
+- [Key Features](#-key-features)
 - [Tech Stack](#-tech-stack)
-- [Installation](#-installation)
-- [Usage](#-usage)
-- [API Documentation](#-api-documentation)
+- [Local Setup](#-local-setup)
+- [Quick Start](#-quick-start)
+- [API Overview](#-api-overview)
 - [Evaluation](#-evaluation)
 - [Deployment](#-deployment)
 - [Monitoring](#-monitoring)
 - [Development](#-development)
-- [Contributing](#-contributing)
 
 ______________________________________________________________________
 
@@ -44,22 +42,15 @@ Financial institutions manage **1,000+ regulatory documents, policies, and repor
 
 ______________________________________________________________________
 
-## ✅ Solution
+## ✅ Solution Overview
 
-An intelligent RAG system that:
+FinTech RAG is an opinionated, end-to-end RAG system designed for **regulatory, risk, and policy documents** in financial services. It provides:
 
-✅ **Understands context**: Semantic search beyond keywords
-✅ **Multi-hop reasoning**: Connects information across documents
-✅ **Grounded answers**: Every claim cited with source + page
-✅ **Hybrid retrieval**: Combines keyword (BM25) + semantic (embeddings)
-✅ **Production-ready**: Scalable, monitored, tested
-
-**Business Value:**
-
-- ⚡ **60% faster** information retrieval
-- 📊 **Auditable citations** for compliance
-- 🎯 **Consistent answers** across organization
-- 💼 **Knowledge democratization**: Junior analysts access senior expertise
+- ✅ **Semantic understanding** beyond keyword search
+- ✅ **Hybrid retrieval** combining BM25 and dense embeddings
+- ✅ **Reranking** using a cross-encoder for better relevance
+- ✅ **Grounded answers** with explicit citations
+- ✅ **Observable, testable, deployable** backend ready for real use
 
 ______________________________________________________________________
 
@@ -116,141 +107,127 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-## 🚀 Features
+## 🚀 Key Features
 
-### Core Capabilities
+### Core RAG Capabilities
 
 - **📚 Document Processing**
 
   - PDF, DOCX, TXT, Markdown support
-  - Semantic chunking with context preservation
-  - Metadata enrichment (source, page, category)
+  - Semantic and structure-aware chunking
+  - Metadata enrichment (source, page, category, tokens)
 
 - **🔍 Hybrid Retrieval**
 
-  - **Dense retrieval**: OpenAI embeddings via Pinecone
-  - **Sparse retrieval**: BM25 keyword matching
+  - **Dense retrieval**: OpenAI embeddings stored in Pinecone
+  - **Sparse retrieval**: BM25 keyword index
   - **Fusion**: Reciprocal Rank Fusion (RRF)
-  - **Reranking**: Cohere cross-encoder
+  - **Reranking**: Cohere cross-encoder (`rerank-english-v3.0`)
 
 - **🤖 Answer Generation**
 
-  - OpenAI GPT-4 with custom prompts
-  - Automatic citation extraction
-  - Confidence scoring
-  - Hallucination mitigation
+  - OpenAI chat models (default: `gpt-4-turbo-preview`)
+  - System prompts tuned for FinTech compliance and risk
+  - Structured citation extraction from generated answers
+  - Optional citation validation and confidence assessment
 
-### Production Features
+### Operational Features
 
-- ⚡ **Performance**: Sub-3s query latency
-- 📊 **Monitoring**: Prometheus + Grafana
-- 🔒 **Security**: API key auth, rate limiting
-- 🐳 **Containerized**: Docker + Kubernetes ready
-- ✅ **Tested**: Unit + integration tests
-- 📝 **Documented**: OpenAPI specs
+- ⚙️ **Configurable** via Pydantic settings and `.env`
+- 📊 **Monitoring** with Prometheus metrics and Grafana dashboards
+- 🔒 **Security primitives** for API key auth and rate limiting
+- 🐳 **Docker & Kubernetes** manifests for production deployment
+- ✅ **Tests**: unit, integration, and benchmark utilities
+- 🧪 **Evaluation tools** for retrieval quality and RAG performance
 
 ______________________________________________________________________
+
+docker build -t fintech-rag:latest .
 
 ## 🛠️ Tech Stack
 
-| Component         | Technology                    | Purpose                |
-| ----------------- | ----------------------------- | ---------------------- |
-| **RAG Framework** | LangChain                     | Orchestration          |
-| **Vector DB**     | Pinecone                      | Dense retrieval        |
-| **Embeddings**    | OpenAI text-embedding-3-large | Semantic search        |
-| **Reranking**     | Cohere rerank-v3              | Relevance optimization |
-| **LLM**           | OpenAI GPT-4                  | Answer generation      |
-| **Sparse Search** | BM25Okapi                     | Keyword matching       |
-| **API**           | FastAPI                       | Backend service        |
-| **Monitoring**    | Prometheus + Grafana          | Observability          |
-| **Container**     | Docker                        | Packaging              |
-| **Orchestration** | Kubernetes                    | Deployment             |
-| **CI/CD**         | GitHub Actions                | Automation             |
+| Component             | Technology                         | Purpose                |
+| --------------------- | ---------------------------------- | ---------------------- |
+| **API**               | FastAPI                            | Backend service        |
+| **RAG Orchestration** | LangChain ecosystem (OpenAI, docs) | Ingestion & generation |
+| **Vector DB**         | Pinecone                           | Dense retrieval        |
+| **Embeddings**        | OpenAI `text-embedding-3-large`    | Semantic search        |
+| **Reranking**         | Cohere `rerank-english-v3.0`       | Relevance optimization |
+| **LLM**               | OpenAI `gpt-4-turbo-preview`       | Answer generation      |
+| **Sparse Search**     | BM25 (in-memory index)             | Keyword matching       |
+| **Config**            | Pydantic Settings                  | Typed configuration    |
+| **Monitoring**        | Prometheus + Grafana               | Observability          |
+| **Container**         | Docker                             | Packaging              |
+| **Orchestration**     | Kubernetes                         | Deployment             |
 
 ______________________________________________________________________
 
-## 📦 Installation
+## 📦 Local Setup
+
+For a full step-by-step walkthrough, see [QUICKSTART.md](QUICKSTART.md).
 
 ### Prerequisites
 
 - Python 3.11+
-- Docker (optional, for containerized deployment)
-- API Keys:
-  - OpenAI
-  - Pinecone
-  - Cohere
+- Git
+- (Optional) Docker & Docker Compose
+- API keys:
+  - OpenAI (`OPENAI_API_KEY`)
+  - Pinecone (`PINECONE_API_KEY`)
+  - Cohere (`COHERE_API_KEY`)
 
-### Local Development Setup
+### One-time Setup
 
 ```bash
-# 1. Clone repository
-git clone https://github.com/your-org/fintech-rag.git
-cd fintech-rag
+git clone https://github.com/ashaduzzaman-sarker/Fintech-Rag.git
+cd Fintech-Rag
 
-# 2. Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# 3. Install dependencies
+# Install dependencies
+python3 -m venv venv
+source venv/bin/activate
 pip install -r requirements.txt
 
-# 4. Configure environment
-cp .env.example .env
-# Edit .env with your API keys
-
-# 5. Initialize Pinecone index (one-time)
-python scripts/setup_pinecone.py
-
-# 6. (Optional) Generate synthetic test data
-python scripts/generate_test_data.py
+# Initial project setup (env file, data dirs, Pinecone index)
+make setup
 ```
 
-### Docker Setup
-
-```bash
-# Build image
-docker build -t fintech-rag:latest .
-
-# Run with Docker Compose (includes Prometheus + Grafana)
-docker-compose -f docker/docker-compose.yml up -d
-```
+Then edit `.env` with your API keys and environment-specific settings.
 
 ______________________________________________________________________
 
-## 💻 Usage
+## ⚡ Quick Start
 
-### 1. Ingest Documents
+The following is the minimal happy-path to see the system working end-to-end. Details and variations are documented in [QUICKSTART.md](QUICKSTART.md) and [STARTUP_GUIDE.md](STARTUP_GUIDE.md).
+
+### 1. Start the API server
 
 ```bash
-# Start the API server
-python -m uvicorn app.main:app --reload
+make run
+# or
+python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
 
-# Ingest documents (separate terminal)
+Open http://localhost:8000/docs to explore the API.
+
+### 2. Generate sample data (optional but recommended)
+
+```bash
+python scripts/generate_test_data.py
+```
+
+### 3. Ingest documents
+
+```bash
 curl -X POST "http://localhost:8000/api/v1/ingest" \
   -H "Content-Type: application/json" \
   -d '{
-    "directory_path": "./data/raw/compliance",
+    "directory_path": "./data/raw",
     "recursive": true,
     "use_advanced_chunking": true
   }'
 ```
 
-**Response:**
-
-```json
-{
-  "status": "success",
-  "message": "Successfully indexed 127 chunks from 15 documents",
-  "stats": {
-    "total_files": 15,
-    "total_chunks": 127,
-    "total_tokens": 89450,
-    "processing_time": 45.2
-  }
-}
-```
-
-### 2. Query the System
+### 4. Ask a question
 
 ```bash
 curl -X POST "http://localhost:8000/api/v1/query" \
@@ -262,31 +239,25 @@ curl -X POST "http://localhost:8000/api/v1/query" \
   }'
 ```
 
-**Response:**
+The response includes the answer, citations, context used, and model metadata.
 
-```json
-{
-  "question": "What are our Basel III capital requirements?",
-  "answer": "According to our Risk Management Framework, Basel III requires a minimum Common Equity Tier 1 (CET1) capital ratio of 4.5%, a Tier 1 capital ratio of 6%, and a total capital ratio of 8% [Source: risk_framework_2024.pdf, Page: 12]. Additionally, a Capital Conservation Buffer of 2.5% is required, bringing the total CET1 requirement to 7% [Source: compliance_policy_basel.pdf, Page: 3].",
-  "citations": [
-    {
-      "source": "risk_framework_2024.pdf",
-      "page": "12",
-      "type": "explicit"
-    },
-    {
-      "source": "compliance_policy_basel.pdf",
-      "page": "3",
-      "type": "explicit"
-    }
-  ],
-  "confidence": 0.89,
-  "confidence_level": "high",
-  "processing_time": 2.34
-}
-```
+______________________________________________________________________
 
-### 3. Python SDK
+## 📚 API Overview
+
+### Endpoints
+
+| Method | Endpoint         | Description        |
+| ------ | ---------------- | ------------------ |
+| `POST` | `/api/v1/ingest` | Ingest documents   |
+| `POST` | `/api/v1/query`  | Query RAG system   |
+| `GET`  | `/api/v1/health` | Health check       |
+| `GET`  | `/api/v1/stats`  | System statistics  |
+| `GET`  | `/metrics`       | Prometheus metrics |
+
+Interactive documentation is available at http://localhost:8000/docs when the server is running.
+
+### Programmatic Usage (Python)
 
 ```python
 from app.ingestion.pipeline import IngestionPipeline
@@ -320,22 +291,6 @@ answer = generator.generate_with_confidence(query, reranked)
 
 print(answer["answer"])
 ```
-
-______________________________________________________________________
-
-## 📚 API Documentation
-
-### Endpoints
-
-| Method | Endpoint         | Description        |
-| ------ | ---------------- | ------------------ |
-| `POST` | `/api/v1/ingest` | Ingest documents   |
-| `POST` | `/api/v1/query`  | Query RAG system   |
-| `GET`  | `/api/v1/health` | Health check       |
-| `GET`  | `/api/v1/stats`  | System statistics  |
-| `GET`  | `/metrics`       | Prometheus metrics |
-
-**Full documentation**: http://localhost:8000/docs (Swagger UI)
 
 ______________________________________________________________________
 
@@ -384,19 +339,49 @@ ______________________________________________________________________
 
 ## 🚢 Deployment
 
-### Kubernetes
+For detailed deployment options (Docker, Docker Compose, Kubernetes, and Streamlit UI), see [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md).
+
+Typical local Docker Compose flow:
 
 ```bash
-# Apply configurations
-kubectl apply -f k8s/namespace.yaml
-kubectl apply -f k8s/secrets.yaml
-kubectl apply -f k8s/configmap.yaml
-kubectl apply -f k8s/deployment.yaml
-
-# Check status
-kubectl get pods -n production
-kubectl logs -f deployment/fintech-rag-api -n production
+make docker-build
+make docker-compose-up
 ```
+
+This starts the API, Prometheus, and Grafana services.
+
+______________________________________________________________________
+
+## 📈 Monitoring
+
+When running via Docker Compose or your own deployment:
+
+- Prometheus metrics: http://localhost:9091
+- Grafana dashboards: http://localhost:3000 (default: `admin` / `admin`)
+
+See [monitoring/prometheus.yml](monitoring/prometheus.yml) and the Grafana dashboards under [monitoring/grafana/dashboards](monitoring/grafana/dashboards) for configuration.
+
+______________________________________________________________________
+
+## 🧑‍💻 Development
+
+Common Make targets for local development:
+
+```bash
+make dev-install     # Install dev dependencies + pre-commit
+make test            # Run all tests
+make lint            # Run linters
+make format          # Format code
+make stats           # Show basic project stats
+```
+
+For a more detailed operator-focused view of the current state of the project and commands, see [STARTUP_GUIDE.md](STARTUP_GUIDE.md).
+
+______________________________________________________________________
+
+## 📄 License
+
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
 
 ### Scaling
 
@@ -498,6 +483,4 @@ ______________________________________________________________________
 
 ## 📞 Support
 
-- **Issues**: [GitHub Issues](https://github.com/your-org/fintech-rag/issues)
-- **Email**: support@yourcompany.com
-- **Docs**: [Documentation](https://docs.yourcompany.com/fintech-rag)
+- **Issues**: https://github.com/ashaduzzaman-sarker/Fintech-Rag/issues
